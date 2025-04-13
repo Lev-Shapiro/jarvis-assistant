@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <title>Jarvis Assistant</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="app-container">
+        <div id="error-container" class="hidden">
+            <div class="error-content">
+                <div class="error-icon">⚠️</div>
+                <div class="error-message"></div>
+                <button class="error-close">×</button>
+            </div>
+        </div>
+        <div id="jarvis-circle-container">
+            <div id="jarvis-circle"></div>
+        </div>
+    </div>
+
+    <script src="./error-display.js"></script>
+    <script src="./jarvis-circle.js"></script>
+    <script src="./renderer.js"></script>
+</body>
+</html>

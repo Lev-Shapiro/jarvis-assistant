@@ -1,0 +1,1 @@
+export type SomeObject = { [key: string]: unknown };

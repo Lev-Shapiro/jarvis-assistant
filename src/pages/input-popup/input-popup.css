@@ -1,0 +1,181 @@
+:root {
+    --background-color-popup: rgba(30, 30, 30, 0.95); /* Slightly transparent dark */
+    --text-color-popup: #e0e0e0;
+    --input-bg: #2a2a2a;
+    --input-border: #4a4a4a;
+    --input-focus-border: #007bff;
+    --placeholder-color: #888;
+    --error-color: #ff4d4d;
+    --accent-color: #007bff;
+    --accent-color-hover: #0069d9;
+    --success-color: #28a745;
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --transition-speed: 0.2s;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: var(--font-family);
+    background-color: transparent; /* Make body background transparent */
+    color: var(--text-color-popup);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px; /* Small padding around the input */
+}
+
+#popup-container {
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color-popup);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Form styling to make it fill the container */
+#jarvis-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+#jarvis-text-input {
+    flex-grow: 1;
+    height: 100%;
+    font-size: 18px;
+    padding: 12px 16px;
+    padding-right: 50px; /* Space for the button */
+    background-color: var(--input-bg);
+    color: var(--text-color-popup);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    outline: none;
+    transition: all var(--transition-speed) ease;
+}
+
+#jarvis-text-input::placeholder {
+    color: var(--placeholder-color);
+    font-style: italic;
+}
+
+#jarvis-text-input:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+/* Submit button styling */
+#submit-button {
+    position: absolute;
+    right: 12px;
+    height: 36px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+#submit-button:hover {
+    background-color: var(--accent-color-hover);
+    transform: scale(1.05);
+}
+
+#submit-button:active {
+    transform: scale(0.95);
+}
+
+/* Empty query visual feedback */
+#jarvis-text-input.empty-query {
+    border-color: var(--error-color);
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Status message styling */
+#status-message {
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+#status-message.hidden {
+    opacity: 0;
+    transform: translateY(10px);
+    display: none;
+}
+
+#status-text {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    color: var(--text-color-popup);
+    position: relative;
+}
+
+#status-text::after {
+    content: "...";
+    position: absolute;
+    animation: ellipsis 1.5s infinite;
+}
+
+/* Spinner animation */
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes ellipsis {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
+} 

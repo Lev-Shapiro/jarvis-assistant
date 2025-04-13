@@ -1,0 +1,184 @@
+:root {
+    --background-color: #1a1a1a; /* Dark grey */
+    --text-color: #e0e0e0; /* Light grey */
+    --primary-accent: #007bff; /* Blue accent, change as desired */
+    --secondary-accent: #4a4a4a; /* Darker grey for borders/elements */
+    --circle-color-1: #00aaff;
+    --circle-color-2: #0077cc;
+    --circle-color-3: #0055aa;
+    --button-bg: #333;
+    --button-hover-bg: #444;
+    --button-active-bg: #555;
+    --listen-button-color: #00cc66; /* Green for listen button */
+    --tts-button-color: #ff9900; /* Orange for TTS button */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* Prevent scrollbars */
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 40px;
+}
+
+#jarvis-circle-container {
+    flex-grow: 1; /* Takes up available space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    perspective: 800px; /* Add perspective for potential 3D effects later */
+}
+
+/* Animated Jarvis Circle */
+#jarvis-circle {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, hsla(195, 100%, 70%, 0.8) 0%, hsla(195, 100%, 50%, 0.9) 40%, hsla(210, 100%, 30%, 1) 100%);
+    box-shadow: 
+        0 0 15px hsla(195, 100%, 60%, 0.6),
+        0 0 30px hsla(195, 100%, 50%, 0.4),
+        inset 0 0 10px hsla(195, 100%, 70%, 0.5); /* Inner glow */
+    position: relative; /* Needed for pseudo-elements if added later */
+    animation: pulse-glow 4s infinite ease-in-out;
+    /* Add a subtle border */
+    border: 1px solid hsla(195, 100%, 80%, 0.2);
+}
+
+/* Keyframes for the pulsing animation */
+@keyframes pulse-glow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 0 15px hsla(195, 100%, 60%, 0.6),
+            0 0 30px hsla(195, 100%, 50%, 0.4),
+            inset 0 0 10px hsla(195, 100%, 70%, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0 25px hsla(195, 100%, 65%, 0.8),
+            0 0 50px hsla(195, 100%, 55%, 0.6),
+            inset 0 0 15px hsla(195, 100%, 75%, 0.7);
+    }
+}
+
+/* Security Protocol Animation */
+@keyframes security-pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 0 15px hsla(0, 100%, 60%, 0.6),
+            0 0 30px hsla(0, 100%, 50%, 0.4),
+            inset 0 0 10px hsla(0, 100%, 70%, 0.5);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 
+            0 0 25px hsla(0, 100%, 65%, 0.8),
+            0 0 50px hsla(0, 100%, 55%, 0.6),
+            inset 0 0 15px hsla(0, 100%, 75%, 0.7);
+    }
+}
+
+/* Error Container Styles */
+#error-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#error-container.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.error-content {
+    background-color: #ff4444;
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 80%;
+    min-width: 300px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    animation: error-appear 0.3s ease-out;
+}
+
+@keyframes error-appear {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.error-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.error-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.error-close:hover {
+    opacity: 1;
+}

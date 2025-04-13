@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <title>Jarvis Input</title>
+    <link rel="stylesheet" href="./input-popup.css">
+</head>
+<body>
+    <div id="popup-container">
+        <form id="jarvis-form">
+            <input type="text" id="jarvis-text-input" placeholder="Ask Jarvis..." autocomplete="off" autofocus>
+            <button type="submit" id="submit-button" aria-label="Submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </form>
+        <div id="status-message" class="hidden">
+            <div class="spinner"></div>
+            <span id="status-text">Processing</span>
+        </div>
+    </div>
+    <script src="./input-renderer.js"></script>
+</body>
+</html> 

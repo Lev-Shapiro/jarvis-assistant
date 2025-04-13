@@ -1,0 +1,40 @@
+{
+	"name": "jarvisos",
+	"version": "1.0.0",
+	"main": "dist/main.js",
+	"scripts": {
+		"clean": "rimraf dist",
+		"build:main": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+		"build:renderer": "webpack --config webpack.config.js",
+		"copy-renderer": "copyfiles -u 2 src/pages/**/*.html src/pages/**/*.css dist/pages",
+		"build": "npm run clean && npm run build:main && npm run build:renderer && npm run copy-renderer",
+		"start": "npm run build && electron ."
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@google-cloud/speech": "^7.0.1",
+		"@google-cloud/text-to-speech": "^6.0.1",
+		"@google/genai": "^0.8.0",
+		"@shapilev/console-step": "^1.0.9",
+		"@tensorflow/tfjs-node": "^4.22.0",
+		"@vladmandic/face-api": "^1.7.15",
+		"canvas": "^3.1.0",
+		"cross-env": "^7.0.3",
+		"dotenv": "^16.5.0",
+		"openai": "^4.93.0",
+		"rimraf": "^6.0.1",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@jxa/global-type": "^1.4.0",
+		"@types/node": "^22.14.0",
+		"copyfiles": "^2.4.1",
+		"electron": "^35.1.5",
+		"tsc-alias": "^1.8.15",
+		"tsconfig-paths": "^4.2.0",
+		"webpack-cli": "^6.0.1"
+	}
+}
