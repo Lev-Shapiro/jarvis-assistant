@@ -7,7 +7,7 @@ import { SecurityProtocolService } from "./security-protocol.service";
 export class SecurityService {
   private isDetectionReady = false;
 
-  private stopStream: () => Promise<void> = () => Promise.resolve();
+  private stopCameraStream: () => Promise<void> = () => Promise.resolve();
 
   constructor(
     private readonly computerVisionService: ComputerVisionService,
@@ -21,7 +21,7 @@ export class SecurityService {
     this.isDetectionReady = true;
   }
 
-  async observe() {
+  async activate() {
     if(!this.isDetectionReady) {
       this.errorNotificationService.notify({
         message: "Security service not ready",
@@ -35,7 +35,7 @@ export class SecurityService {
     }
 
     // Start a video stream
-    const stopStream = await this.computerVisionService.startVideoStream(
+    const stopCameraStream = await this.computerVisionService.startVideoStream(
       async (imagePath) => {
         const people = await this.faceApiService.recognizePeople(imagePath);
         console.log("People detected:", people);
@@ -43,11 +43,11 @@ export class SecurityService {
       }
     );
 
-    this.stopStream = stopStream;
+    this.stopCameraStream = stopCameraStream;
   }
 
-  async stop() {
-    if(!this.stopStream) {
+  async deactivate() {
+    if(!this.stopCameraStream) {
       this.errorNotificationService.notify({
         message: "Security service not started",
         isCritical: true,
@@ -60,7 +60,7 @@ export class SecurityService {
     }
 
     this.securityProtocolService.deactivateProtocol();
-    await this.stopStream();
+    await this.stopCameraStream();
   }
 
   private async handlePeopleDetection(people: Person[]) {

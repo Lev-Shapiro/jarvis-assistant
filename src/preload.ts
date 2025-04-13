@@ -51,5 +51,8 @@ contextBridge.exposeInMainWorld('passwordAPI', {
   },
   cancelVerification: () => {
     ipcRenderer.invoke('cancel-verification');
+  },
+  quitApp: () => {
+    ipcRenderer.invoke('app-quit');
   }
 });

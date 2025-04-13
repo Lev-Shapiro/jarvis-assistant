@@ -6,6 +6,7 @@ declare global {
     passwordAPI: {
       verifyPassword: (password: string) => void;
       cancelVerification: () => void;
+      quitApp: () => void;
     };
     mainWindowAPI: {
       onMessage: (channel: string, func: (...args: any[]) => void) => void;

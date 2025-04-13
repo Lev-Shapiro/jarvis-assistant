@@ -1,4 +1,5 @@
-import { app } from "electron";
+import { ErrorNotificationService } from "@/infrastructure/error-notification/error-notification.service";
+import { WindowManager } from "@/infrastructure/windows/window-manager";
 
 /**
  * Handles security password verification for sensitive actions
@@ -7,31 +8,51 @@ import { app } from "electron";
 export class PasswordVerificationService {
   private readonly defaultPassword: string = "jarvis2024"; // For demonstration. In production, use a secure method.
   
-  /**
-   * Verifies if the provided password is correct
-   * @param password The password to verify
-   * @returns True if the password is correct, false otherwise
-   */
-  async verifyPassword(password: string): Promise<boolean> {
-    // Simulate an asynchronous verification process
-    return new Promise((resolve) => {
-      // In a real application, you would use a secure password verification method
-      // like comparing hashed passwords or using a secure credential store
-      setTimeout(() => {
-        resolve(password === this.defaultPassword);
-      }, 1000); // Add a slight delay for security (prevents timing attacks)
-    });
-  }
-  
-  /**
-   * Quits the application after successful verification
-   * This is a domain service method that encapsulates the application quit logic
-   */
-  quitApplication(): void {
-    // Perform any cleanup needed before quitting
-    console.log("Application quitting via password verification");
+  constructor(
+    private readonly windowManager: WindowManager,
+    private readonly errorNotificationService: ErrorNotificationService,
+  ) {}
+
+  async handlePasswordVerification(_event: Electron.IpcMainInvokeEvent, password: string): Promise<boolean> {
+    console.log('Received password verification request');
     
-    // Quit the application
-    app.quit();
+    const passwordPopupWindow = this.windowManager.passwordPopupWindow;
+
+    if(!passwordPopupWindow) {
+      this.errorNotificationService.notify({
+        message: 'Password popup window not found',
+        isCritical: true,
+        isTerminal: true,
+        isApp: true,
+        isAudio: false
+      });
+
+      return false;
+    }
+    
+    // Notify the renderer that verification is in progress
+    if (passwordPopupWindow.instance && passwordPopupWindow.instance.webContents) {
+      passwordPopupWindow.instance.webContents.send('verification-status', 'Verifying password...');
+    }
+    
+    // Verify the password
+    const isValid = password === this.defaultPassword;
+    
+    // Send the result back to the renderer
+    if (passwordPopupWindow.instance && passwordPopupWindow.instance.webContents) {
+      passwordPopupWindow.instance.webContents.send('verification-result', isValid);
+    }
+    
+    return isValid;
+  }
+
+  async handleCancelVerification(): Promise<void> {
+    console.log('Password verification cancelled');
+    
+    const passwordPopupWindow = this.windowManager.passwordPopupWindow;
+    
+    if (passwordPopupWindow) {
+      passwordPopupWindow.hide();
+    }
   }
 } 

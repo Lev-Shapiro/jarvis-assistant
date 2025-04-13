@@ -1,7 +1,8 @@
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import { AudioService } from "./infrastructure/audio/audio.service";
 import { SecurityService } from "./infrastructure/security/security.service";
 import { WindowManager } from "./infrastructure/windows/window-manager";
+import { YoutubePlayerService } from "./libraries/youtube/youtube-player.service";
 import { ShortcutMainReceptor } from "./receptors/shortcuts/main-receptor";
 import { wait } from "./scripts/wait";
 
@@ -10,7 +11,8 @@ export class Launcher {
     private readonly windowManager: WindowManager,
     private readonly shortcutReceptor: ShortcutMainReceptor,
     private readonly audioService: AudioService,
-    private readonly securityService: SecurityService
+    private readonly securityService: SecurityService,
+    private readonly youtubePlayerService: YoutubePlayerService
   ) {}
 
   initialize(): void {
@@ -24,7 +26,7 @@ export class Launcher {
       this.setupEventHandlers();
 
       // await this.securityService.loadTrainingData();
-      // await this.securityService.observe();
+      // await this.securityService.activate();
 
       // Log that the app is ready and provide instructions
       console.log("======================================================");
@@ -39,16 +41,23 @@ export class Launcher {
     });
   }
 
-  cleanup(): void {
+  async cleanup(): Promise<void> {
+    ipcMain.removeHandler('app-quit');
+
     this.shortcutReceptor.unregisterShortcuts();
     this.audioService.clearAllAudioFiles();
-    this.securityService.stop();
+    await this.securityService.deactivate();
   }
 
   private setupEventHandlers(): void {
+    ipcMain.handle('app-quit', async () => {
+      await this.cleanup();
+      app.quit();
+    });
+    
     // Unregister shortcuts when the app quits
-    app.on("will-quit", () => {
-      this.cleanup();
+    app.on("will-quit", async () => {
+      await this.cleanup();
     });
 
     // Quit when all windows are closed, except on macOS
@@ -68,6 +77,8 @@ export class Launcher {
   }
 
   private async testing(): Promise<void> {
+    await this.youtubePlayerService.playSong("Starboy by The Weeknd");
+
     // await this.errorNotificationService.notify({
     //   message: "Detected suspicious activity",
     //   isCritical: false,

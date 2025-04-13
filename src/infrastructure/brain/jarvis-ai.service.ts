@@ -21,7 +21,7 @@ export class JarvisAIService {
         content: query,
       },
     ], {
-      model: AI_MODELS.GEMINI_2_FLASH_LITE,
+      model: AI_MODELS.GEMINI_2_FLASH,
       responseFormat: AIRequestFormat.TEXT,
       temperature: 0.5,
     }, AILogOptions.default("Jarvis AI Service"));

@@ -114,9 +114,17 @@ if (passwordInput && passwordForm && passwordStatusElement && passwordSubmitButt
     });
 
     // Handle password verification result
-    window.mainWindowAPI.onMessage("verification-result", (result: boolean) => {
-      if (result) {
+    window.mainWindowAPI.onMessage("verification-result", (isValid: boolean) => {
+      if (isValid) {
         passwordStatusText.textContent = "Password accepted. Quitting...";
+
+        // Show success status
+        passwordForm.style.display = "none";
+        passwordStatusElement.classList.remove("hidden");
+        passwordStatusElement.style.opacity = "1";
+        passwordStatusElement.style.transform = "translateY(0)";
+        
+        window.passwordAPI.quitApp();
       } else {
         passwordStatusText.textContent = "Incorrect password!";
         

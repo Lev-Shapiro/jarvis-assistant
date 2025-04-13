@@ -18,6 +18,8 @@ import { AITextService } from "./libraries/openai/text-ai.service";
 import { AILogService } from "./libraries/openai/text/domain/ai-log.service";
 import { AIConcurrentService } from "./libraries/openai/text/infra/ai-concurrent.service";
 import { AIService } from "./libraries/openai/text/infra/ai.service";
+import { YoutubePlayerService } from "./libraries/youtube/youtube-player.service";
+import { YoutubeSearchService } from "./libraries/youtube/youtube-search.service";
 import { ShortcutMainReceptor } from "./receptors/shortcuts/main-receptor";
 
 export class Application {
@@ -47,19 +49,26 @@ export class Application {
 
   private jarvisAIService = new JarvisAIService(this.aiTextService, this.audioService);
   private textInputService = new TextInputService(this.jarvisAIService, this.windowManager, this.errorNotificationService, this.audioService);
-  private passwordVerificationService = new PasswordVerificationService();
+  private passwordVerificationService = new PasswordVerificationService(this.windowManager, this.errorNotificationService);
   private shortcutReceptor = new ShortcutMainReceptor(
     this.windowManager, 
     this.textInputService, 
     this.errorNotificationService,
-    this.passwordVerificationService
+    this.passwordVerificationService,
+  );
+
+  private youtubeSearchService = new YoutubeSearchService();
+  private youtubePlayerService = new YoutubePlayerService(
+    this.youtubeSearchService,
+    this.audioPlayerService
   );
 
   private launcher = new Launcher(
     this.windowManager,
     this.shortcutReceptor,
     this.audioService,
-    this.securityService
+    this.securityService,
+    this.youtubePlayerService
   );
 
   constructor() {

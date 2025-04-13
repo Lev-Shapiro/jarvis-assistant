@@ -45,8 +45,8 @@ export const AI_MODELS = {
     'built-in',
     false,
   ),
-  GEMINI_2_FLASH_LITE: new AIModel(
-    'gemini-2.0-flash-lite',
+  GEMINI_2_FLASH: new AIModel(
+    'gemini-2.0-flash',
     AIPrice.set(0.00035), // $0.00035 per 1K input tokens
     AIPrice.set(0.00035), // $0.00035 per 1K output tokens
     'built-in',
