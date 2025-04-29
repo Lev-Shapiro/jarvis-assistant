@@ -1,10 +1,10 @@
 import { app, ipcMain } from "electron";
 import { AudioService } from "./infrastructure/audio/audio.service";
+import { BrowserConnectionService } from "./infrastructure/browser/browser-connection.service";
 import { SecurityService } from "./infrastructure/security/security.service";
 import { WindowManager } from "./infrastructure/windows/window-manager";
 import { YoutubePlayerService } from "./libraries/youtube/youtube-player.service";
 import { ShortcutMainReceptor } from "./receptors/shortcuts/main-receptor";
-import { wait } from "./scripts/wait";
 
 export class Launcher {
   constructor(
@@ -12,21 +12,24 @@ export class Launcher {
     private readonly shortcutReceptor: ShortcutMainReceptor,
     private readonly audioService: AudioService,
     private readonly securityService: SecurityService,
-    private readonly youtubePlayerService: YoutubePlayerService
+    private readonly youtubePlayerService: YoutubePlayerService,
+    private readonly browserConnectionService: BrowserConnectionService,
   ) {}
 
   initialize(): void {
     // Wait until the app is ready before creating windows
     app.whenReady().then(async () => {
       this.windowManager.createMainWindow();
+      this.windowManager.createInfobarWindow();
       this.windowManager.createInputPopupWindow();
       this.windowManager.createPasswordPopupWindow();
+      this.windowManager.createAudioToolbarWindow();
       this.shortcutReceptor.registerShortcuts();
       
       this.setupEventHandlers();
 
-      // await this.securityService.loadTrainingData();
-      // await this.securityService.activate();
+      await this.securityService.loadTrainingData();
+      await this.securityService.activate();
 
       // Log that the app is ready and provide instructions
       console.log("======================================================");
@@ -36,8 +39,9 @@ export class Launcher {
       console.log("- Press Ctrl+Q to open quit confirmation");
       console.log("======================================================");
 
-      await wait(2000);
-      await this.testing();
+      // await this.browserConnectionService.connect({ waitUntilConnected: true });
+
+      // await this.testing();
     });
   }
 
@@ -77,7 +81,9 @@ export class Launcher {
   }
 
   private async testing(): Promise<void> {
-    await this.youtubePlayerService.playSong("Starboy by The Weeknd");
+    // Uncomment to test different services
+    
+    // await this.youtubePlayerService.playSong("Starboy by The Weeknd");
 
     // await this.errorNotificationService.notify({
     //   message: "Detected suspicious activity",
@@ -88,9 +94,9 @@ export class Launcher {
     // });
 
     // await this.securityService.activateProtocol();
-
     // await wait(10000);
-
     // await this.securityService.deactivateProtocol();
+
+    // Test the Chrome Extension integration
   }
 }

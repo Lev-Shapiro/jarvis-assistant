@@ -1,6 +1,7 @@
-import { PasswordVerificationService } from "@/domain/security/password-verification.service";
+import { ContractTestingService } from "@/infrastructure/contrast-testing/contract-testing.service";
 import { TextInputService } from "@/infrastructure/conversation/text-input.service";
 import { ErrorNotificationService } from "@/infrastructure/error-notification/error-notification.service";
+import { PasswordVerificationService } from "@/infrastructure/security/password-verification.service";
 import { WindowManager } from "@/infrastructure/windows/window-manager";
 import { globalShortcut, ipcMain } from "electron";
 
@@ -10,6 +11,7 @@ export class ShortcutMainReceptor {
     private readonly textInputService: TextInputService,
     private readonly errorNotificationService: ErrorNotificationService,
     private readonly passwordVerificationService: PasswordVerificationService,
+    private readonly contractTestingService: ContractTestingService,
   ) {
     this.registerIpcHandlers();
   }
@@ -17,7 +19,8 @@ export class ShortcutMainReceptor {
   public registerShortcuts() {
     const shortcuts = [
       { key: 'Control+I', handler: this.handleTextInputShortcut.bind(this) },
-      { key: 'Control+Q', handler: this.handleOpenPasswordPopupShortcut.bind(this) }
+      { key: 'Control+Q', handler: this.handleOpenPasswordPopupShortcut.bind(this) },
+      { key: 'Control+T', handler: this.handleContrastTestingShortcut.bind(this) }
     ]
 
     shortcuts.forEach((shortcut) => {
@@ -82,19 +85,9 @@ export class ShortcutMainReceptor {
     }
   }
 
-  private registerIpcHandlers() {
-    // Register handler for text-input IPC invocation
-    ipcMain.handle('text-input', this.handleTextInput.bind(this));
-    
-    // Register handlers for password verification
-    ipcMain.handle('verify-password', this.passwordVerificationService.handlePasswordVerification.bind(this.passwordVerificationService));
-    ipcMain.handle('cancel-verification', this.passwordVerificationService.handleCancelVerification.bind(this.passwordVerificationService));
-  }
-
-  private unregisterIpcHandlers() {
-    ipcMain.removeHandler('text-input');
-    ipcMain.removeHandler('verify-password');
-    ipcMain.removeHandler('cancel-verification');
+  private async handleContrastTestingShortcut() {
+    console.log('Contrast testing shortcut triggered');
+    await this.contractTestingService.startContrastTesting();
   }
 
   private async handleTextInput(_event: Electron.IpcMainInvokeEvent, query: string): Promise<void> {
@@ -119,5 +112,20 @@ export class ShortcutMainReceptor {
   public cleanup() {
     this.unregisterShortcuts();
     this.unregisterIpcHandlers();
+  }
+
+  private registerIpcHandlers() {
+    // Register handler for text-input IPC invocation
+    ipcMain.handle('text-input', this.handleTextInput.bind(this));
+    
+    // Register handlers for password verification
+    ipcMain.handle('verify-password', this.passwordVerificationService.handlePasswordVerification.bind(this.passwordVerificationService));
+    ipcMain.handle('cancel-verification', this.passwordVerificationService.handleCancelVerification.bind(this.passwordVerificationService));
+  }
+
+  private unregisterIpcHandlers() {
+    ipcMain.removeHandler('text-input');
+    ipcMain.removeHandler('verify-password');
+    ipcMain.removeHandler('cancel-verification');
   }
 }

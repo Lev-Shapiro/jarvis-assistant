@@ -1,6 +1,7 @@
 import { app, globalShortcut } from 'electron';
 import { ErrorNotificationService } from '../error-notification/error-notification.service';
 import { WindowManager } from "../windows/window-manager";
+
 export class SecurityProtocolService {
   private registeredShortcuts: string[] = [];
   private _isProtocolActive = false;

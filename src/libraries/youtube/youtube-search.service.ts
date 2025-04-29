@@ -28,11 +28,11 @@ export class YoutubeSearchService {
     try {
       const response = await this.youtube.search.list({
         part: ['snippet'],
-        q: `${query} song`,
+        q: `${query}`,
         maxResults,
         type: ['video'],
         videoCategoryId: '10', // Music category
-        videoEmbeddable: 'true'
+        videoEmbeddable: 'true',
       });
 
       if (!response.data.items || response.data.items.length === 0) {

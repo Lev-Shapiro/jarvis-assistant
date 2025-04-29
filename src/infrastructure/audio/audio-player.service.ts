@@ -27,22 +27,28 @@ export class AudioPlayerService {
       this.currentProcess = spawn('afplay', [audioPath]);
       this.setStatus(AudioPlayerStatus.PLAYING);
       
-      // Handle process completion
-      this.currentProcess.on('close', (code: number) => {
-        if (code === 0) {
-          // Normal completion
-          this.setStatus(AudioPlayerStatus.IDLE);
-        } else if (code !== null) {
-          // Error completion
+      // Return a promise that resolves when the audio completes
+      return new Promise<void>((resolve, reject) => {
+        // Handle process completion
+        this.currentProcess.on('close', (code: number) => {
+          if (code === 0) {
+            // Normal completion
+            this.setStatus(AudioPlayerStatus.IDLE);
+            resolve();
+          } else if (code !== null) {
+            // Error completion
+            this.setStatus(AudioPlayerStatus.ERROR);
+            reject(new Error(`Audio playback failed with code ${code}`));
+          }
+          this.currentProcess = null;
+        });
+        
+        // Handle process errors
+        this.currentProcess.on('error', (err: Error) => {
           this.setStatus(AudioPlayerStatus.ERROR);
-        }
-        this.currentProcess = null;
-      });
-      
-      // Handle process errors
-      this.currentProcess.on('error', (err: Error) => {
-        this.setStatus(AudioPlayerStatus.ERROR);
-        this.currentProcess = null;
+          this.currentProcess = null;
+          reject(err);
+        });
       });
     } catch (error) {
       this.setStatus(AudioPlayerStatus.ERROR);

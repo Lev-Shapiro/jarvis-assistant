@@ -74,12 +74,12 @@ export class ComputerVisionService {
           const imagePath = await this.captureImage();
           await frameCallback(imagePath);
           // Small delay between frames
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise(resolve => setTimeout(resolve, 200));
         } catch (error) {
           console.error('Error in camera stream:', error);
           if (isRunning) {
             // Wait before retrying
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 200));
           }
         }
       }

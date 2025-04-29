@@ -1,0 +1,89 @@
+[
+  {
+    "action": "open_website",
+    "parameters": {
+      "url": "https://www.linkedin.com/"
+    }
+  },
+  {
+    "action": "search",
+    "parameters": {
+      "query": "coaching businesses"
+    }
+  },
+  {
+    "action": "loop_actions",
+    "parameters": {
+      "condition_prompt": "Keep going until 10 businesses without websites are found or the search results are exhausted",
+      "sub_actions": [
+        {
+          "action": "get_list_of_elements",
+          "parameters": {
+            "id": "$coaching_businesses",
+            "query": "list of search results"
+          }
+        },
+        {
+          "action": "loop_elements_in_list",
+          "parameters": {
+            "listId": "$coaching_businesses",
+            "elementId": "$element",
+            "sub_actions": [
+              {
+                "action": "retrieve",
+                "parameters": {
+                  "elementId": "$element",
+                  "query": "business name",
+                  "saveAs": "$business_name"
+                }
+              },
+              {
+                "action": "retrieve",
+                "parameters": {
+                  "elementId": "$element",
+                  "query": "website link",
+                  "saveAs": "$website_link",
+                  "is_optional": true,
+                  "default_value": null
+                }
+              },
+              {
+                "action": "retrieve",
+                "parameters": {
+                  "elementId": "$element",
+                  "query": "contact information",
+                  "saveAs": "$contact_information"
+                }
+              },
+              {
+                "action": "retrieve",
+                "parameters": {
+                  "elementId": "$element",
+                  "query": "profile link",
+                  "saveAs": "$profile_link"
+                }
+              },
+              {
+                "action": "send_stream_result",
+                "parameters": {
+                  "data": {
+                    "website": "$website_link",
+                    "business_name": "$business_name",
+                    "contact_information": "$contact_information",
+                    "profile_link": "$profile_link"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": "scrollY",
+          "parameters": {
+            "value": 1000
+          }
+        }
+      ]
+    }
+  }
+]

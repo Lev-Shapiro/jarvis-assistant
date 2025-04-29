@@ -1,4 +1,3 @@
-import { AudioService } from "../audio/audio.service";
 import { JarvisAIService } from "../brain/jarvis-ai.service";
 import { ErrorNotificationService } from "../error-notification/error-notification.service";
 import { WindowManager } from "../windows/window-manager";
@@ -8,7 +7,6 @@ export class TextInputService {
     private jarvisAIService: JarvisAIService,
     private windowManager: WindowManager,
     private errorNotificationService: ErrorNotificationService,
-    private audioService: AudioService
   ) {}
 
   open() {

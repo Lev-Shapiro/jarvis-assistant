@@ -8,3 +8,5 @@ export const JARVIS_CAMERA_PATH = path.join(JARVIS_STORAGE_PATH, "camera");
 
 export const JARVIS_VOICE: AIVoice = AIVoice.JARVIS;
 export const DEFAULT_PREMIUM_QUALITY: boolean = false;
+
+export const CHROME_EXTENSION_ID = "njnbnjiebcfikpnedpohkjdnpeamnbol";

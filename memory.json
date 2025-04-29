@@ -1,0 +1,19 @@
+{
+  "Hi Jarvis, how are you?": {
+    "personalDetails": {
+      "name": "Lev",
+      "face_id": 1,
+      "gender": "male",
+      "relation": "owner"
+    },
+    "history": {
+      "latest_conversation_date": "22/4/25",
+      "recent": [
+        "Talked about the book Atomic Habits",
+        "Searched for the latest news in the stock market",
+        "Asked to play Metallica - Nothing Else Matters",
+        "Asked to play a song by Queen"
+      ]
+    }
+  }
+}
