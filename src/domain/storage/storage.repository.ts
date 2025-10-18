@@ -2,19 +2,19 @@ import fs from "fs";
 import path from "path";
 
 export class JarvisStorageRepository {
-  constructor(private readonly storagePath: string) {}
+  constructor(private readonly storagePath: string) { }
 
-  save(audioPath: string, buffer: Buffer): void {
+  save(filePath: string, buffer: Buffer): void {
     try {
-      // Ensure directory exists
-      const dir = path.dirname(audioPath);
+      const dir = path.dirname(filePath);
+
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      
-      fs.writeFileSync(audioPath, buffer);
+
+      fs.writeFileSync(filePath, buffer);
     } catch (error) {
-      console.error(`Failed to save audio to ${audioPath}:`, error);
+      console.error(`Failed to save audio to ${filePath}:`, error);
       throw new Error(`Failed to save audio file: ${error}`);
     }
   }

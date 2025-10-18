@@ -1,22 +1,22 @@
 import { wait } from "@/scripts/wait";
 import { JarvisAIService } from "../brain/jarvis-ai.service";
+import { ActionExecutor } from "../browser/action/executor";
 import { BrowserConnectionService } from "../browser/browser-connection.service";
-import { BrowserActionsService } from "../browser/executor/executor";
 import { InfobarType } from "../infobar/infobar-type";
 import { InfobarService, InfobarUpdatePayload } from "../infobar/infobar.service";
 import { ProgressStatus } from "../infobar/types/progress-status";
 import { TextFormatType } from "../infobar/types/text-format-type";
 
-export class ContractTestingService {
+export class ContrastTestingService {
   DELAY_BETWEEN_TESTS = 2000;
 
   constructor(
     private readonly browserConnectionService: BrowserConnectionService,
-    private readonly browserActionsService: BrowserActionsService,
+    private readonly browserActionsService: ActionExecutor,
     private readonly jarvisAiService: JarvisAIService,
     private readonly infobarService: InfobarService
-  ) {}
-  
+  ) { }
+
   public async startContrastTesting() {
     await this.jarvisAiService.speak('Starting contrast testing');
 
@@ -152,7 +152,7 @@ export class ContractTestingService {
     // await this.browserActionsService.closeTab();
 
     // await this.jarvisAiService.speak("Testing complete. Disconnecting from browser");
-    
+
     // await this.browserConnectionService.disconnect();
   }
 

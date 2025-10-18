@@ -4,10 +4,10 @@ import { AudioPlayerService } from "./infrastructure/audio/audio-player.service"
 import { AudioToolbarService } from "./infrastructure/audio/audio-toolbar.service";
 import { AudioService } from "./infrastructure/audio/audio.service";
 import { JarvisAIService } from "./infrastructure/brain/jarvis-ai.service";
+import { ActionExecutor } from "./infrastructure/browser/action/executor";
 import { BrowserConnectionService } from "./infrastructure/browser/browser-connection.service";
 import { ConnectionRepository } from "./infrastructure/browser/connection-repository";
-import { BrowserActionsService } from "./infrastructure/browser/executor/executor";
-import { ContractTestingService } from "./infrastructure/contrast-testing/contract-testing.service";
+import { ContrastTestingService } from "./infrastructure/contrast-testing/contrast-testing.service";
 import { TextInputService } from "./infrastructure/conversation/text-input.service";
 import { ErrorNotificationService } from "./infrastructure/error-notification/error-notification.service";
 import { InfobarService } from "./infrastructure/infobar/infobar.service";
@@ -49,27 +49,27 @@ export class Application {
     this.youtubeSearchService,
     this.audioPlayerService
   );
-  
+
   private connectionRepository = new ConnectionRepository();
   private browserReceptors = new BrowserReceptors();
   private browserConnectionService = new BrowserConnectionService(this.connectionRepository, this.browserReceptors);
-  private browserActionsService = new BrowserActionsService(this.browserConnectionService);
-  
+  private browserActionsService = new ActionExecutor(this.browserConnectionService);
+
   private audioToolbarService = new AudioToolbarService(this.windowManager, this.audioPlayerService);
   private jarvisAIService = new JarvisAIService(this.audioService, this.youtubePlayerService, this.audioPlayerService, this.audioToolbarService);
   private textInputService = new TextInputService(this.jarvisAIService, this.windowManager, this.errorNotificationService);
   private infobarService = new InfobarService(this.windowManager);
 
-  private contractTestingService = new ContractTestingService(this.browserConnectionService, this.browserActionsService, this.jarvisAIService, this.infobarService);
+  private contrastTestingService = new ContrastTestingService(this.browserConnectionService, this.browserActionsService, this.jarvisAIService, this.infobarService);
 
   private shortcutReceptor = new ShortcutMainReceptor(
-    this.windowManager, 
-    this.textInputService, 
+    this.windowManager,
+    this.textInputService,
     this.errorNotificationService,
     this.passwordVerificationService,
-    this.contractTestingService,
+    this.contrastTestingService,
   );
-  
+
   private launcher = new Launcher(
     this.windowManager,
     this.shortcutReceptor,

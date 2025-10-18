@@ -22,17 +22,17 @@ export class ComputerVisionService {
           reject(new Error(`Failed to list camera devices: ${error.message}`));
           return;
         }
-        
+
         const cameraNames: string[] = [];
         const lines = stdout.split('\n');
-        
+
         for (const line of lines) {
           const match = line.match(/^\s{4}(.+):/);
           if (match && !line.includes('Model')) {
             cameraNames.push(match[1].trim());
           }
         }
-        
+
         resolve(cameraNames);
       });
     });
@@ -41,19 +41,20 @@ export class ComputerVisionService {
   /**
    * Captures a single image from the camera
    */
+  // !!! TODO: Imagesnap is small and is used PURELY for MVP-Display purposes. Replace with a more robust solution later.
   async captureImage(): Promise<string> {
     const outputFilePath = this.storageRepository.getPath(`capture-${Date.now()}.jpg`)
-    
+
     return new Promise((resolve, reject) => {
       // Using imagesnap, a common command-line tool for macOS camera capture
       const command = `imagesnap -w 1 ${outputFilePath}`;
-      
+
       exec(command, (error) => {
         if (error) {
           reject(new Error(`Failed to capture image: ${error.message}`));
           return;
         }
-        
+
         resolve(outputFilePath);
       });
     });
@@ -67,7 +68,7 @@ export class ComputerVisionService {
     frameCallback: (imagePath: string) => Promise<void>
   ): Promise<() => Promise<void>> {
     let isRunning = true;
-    
+
     const streamProcess = async () => {
       while (isRunning) {
         try {
@@ -84,10 +85,10 @@ export class ComputerVisionService {
         }
       }
     };
-    
+
     // Start the streaming process
     streamProcess();
-    
+
     // Return a function to stop the stream
     return async () => {
       isRunning = false;

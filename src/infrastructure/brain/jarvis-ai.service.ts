@@ -56,7 +56,7 @@ export class JarvisAIService {
           try {
             // Activate the audio toolbar with the song query as title
             this.audioToolbarService.activateToolbar(query);
-            
+
             // Use the injected service
             await this.youtubePlayerService.playSong(query, language);
 
@@ -75,7 +75,7 @@ export class JarvisAIService {
           try {
             // Use the injected service
             await this.audioPlayerService.stopAudio();
-            
+
             return "Music stopped.";
           } catch (error: any) {
             console.error("Error in stop_music tool:", error);

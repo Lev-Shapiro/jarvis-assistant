@@ -1,4 +1,4 @@
-import { ContractTestingService } from "@/infrastructure/contrast-testing/contract-testing.service";
+import { ContrastTestingService } from "@/infrastructure/contrast-testing/contrast-testing.service";
 import { TextInputService } from "@/infrastructure/conversation/text-input.service";
 import { ErrorNotificationService } from "@/infrastructure/error-notification/error-notification.service";
 import { PasswordVerificationService } from "@/infrastructure/security/password-verification.service";
@@ -11,7 +11,7 @@ export class ShortcutMainReceptor {
     private readonly textInputService: TextInputService,
     private readonly errorNotificationService: ErrorNotificationService,
     private readonly passwordVerificationService: PasswordVerificationService,
-    private readonly contractTestingService: ContractTestingService,
+    private readonly contrastTestingService: ContrastTestingService,
   ) {
     this.registerIpcHandlers();
   }
@@ -41,8 +41,8 @@ export class ShortcutMainReceptor {
 
   public handleTextInputShortcut() {
     const inputPopupWindow = this.windowManager.inputPopupWindow;
-    
-    if(!inputPopupWindow) {
+
+    if (!inputPopupWindow) {
       this.errorNotificationService.notify({
         message: 'Input popup window not found',
         isCritical: true,
@@ -55,7 +55,7 @@ export class ShortcutMainReceptor {
 
     inputPopupWindow.show();
     inputPopupWindow.focus();
-    
+
     // Safely send the message to the window
     if (inputPopupWindow.instance && inputPopupWindow.instance.webContents) {
       inputPopupWindow.instance.webContents.send('open-input');
@@ -64,8 +64,8 @@ export class ShortcutMainReceptor {
 
   public handleOpenPasswordPopupShortcut() {
     const passwordPopupWindow = this.windowManager.passwordPopupWindow;
-    
-    if(!passwordPopupWindow) {
+
+    if (!passwordPopupWindow) {
       this.errorNotificationService.notify({
         message: 'Password popup window not found',
         isCritical: true,
@@ -78,7 +78,7 @@ export class ShortcutMainReceptor {
 
     passwordPopupWindow.show();
     passwordPopupWindow.focus();
-    
+
     // Safely send the message to the window
     if (passwordPopupWindow.instance && passwordPopupWindow.instance.webContents) {
       passwordPopupWindow.instance.webContents.send('open-password');
@@ -87,15 +87,15 @@ export class ShortcutMainReceptor {
 
   private async handleContrastTestingShortcut() {
     console.log('Contrast testing shortcut triggered');
-    await this.contractTestingService.startContrastTesting();
+    await this.contrastTestingService.startContrastTesting();
   }
 
   private async handleTextInput(_event: Electron.IpcMainInvokeEvent, query: string): Promise<void> {
     console.log('Received query in main receptor:', query);
-    
+
     const inputPopupWindow = this.windowManager.inputPopupWindow;
 
-    if(!inputPopupWindow) {
+    if (!inputPopupWindow) {
       this.errorNotificationService.notify({
         message: 'Input popup window not found',
         isCritical: true,
@@ -103,9 +103,10 @@ export class ShortcutMainReceptor {
         isApp: true,
         isAudio: false
       });
+
       return;
     }
-    
+
     await this.textInputService.processTextInput(query);
   }
 
@@ -117,7 +118,7 @@ export class ShortcutMainReceptor {
   private registerIpcHandlers() {
     // Register handler for text-input IPC invocation
     ipcMain.handle('text-input', this.handleTextInput.bind(this));
-    
+
     // Register handlers for password verification
     ipcMain.handle('verify-password', this.passwordVerificationService.handlePasswordVerification.bind(this.passwordVerificationService));
     ipcMain.handle('cancel-verification', this.passwordVerificationService.handleCancelVerification.bind(this.passwordVerificationService));

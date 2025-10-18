@@ -11,7 +11,7 @@ export class YoutubePlayerService {
   constructor(
     private readonly youtubeSearchService: YoutubeSearchService,
     private readonly audioPlayerService: AudioPlayerService
-  ) {}
+  ) { }
 
   // TODO: Stops working after 02:54 minutes of the audio
   async playSong(input: string, language: string): Promise<void> {
@@ -53,13 +53,13 @@ export class YoutubePlayerService {
 
       // Start playing the audio
       this.audioPlayerService.playAudioStream(pcmStream);
-      
+
       // Create a promise that resolves when the audio finishes playing
       return new Promise<void>((resolve, reject) => {
         // Set up a status change listener
         const statusListener = (status: AudioPlayerStatus) => {
           console.log(`Audio player status changed: ${status}`);
-          
+
           // When the status changes to IDLE (finished) or ERROR, resolve or reject
           if (status === AudioPlayerStatus.IDLE) {
             this.audioPlayerService.onStatusChange(statusListener); // Remove listener
@@ -69,7 +69,7 @@ export class YoutubePlayerService {
             reject(new Error('Audio playback failed'));
           }
         };
-        
+
         // Register the status change listener
         this.audioPlayerService.onStatusChange(statusListener);
       });
@@ -84,19 +84,19 @@ export class YoutubePlayerService {
     let lastTimemark: string | null = null;
     let stuckCount = 0;
     const outputStream = new PassThrough();
-    
+
     const processStream = (stream: Readable, timemark?: string) => {
       const command = ffmpeg(stream)
         .audioCodec('pcm_s16le')
         .format('s16le')
         .audioChannels(2)
         .audioFrequency(44100);
-        
+
       // If we're restarting from a specific timemark
       if (timemark) {
         command.setStartTime(timemark);
       }
-      
+
       return command
         .on('start', (commandLine) => {
           console.log(`ffmpeg process started${timemark ? ` from ${timemark}` : ''}:`, commandLine);
@@ -105,22 +105,22 @@ export class YoutubePlayerService {
         })
         .on('progress', (progress) => {
           console.log('ffmpeg Processing: ' + progress.timemark);
-          
+
           // Check if timemark is stuck
           if (lastTimemark === progress.timemark) {
             stuckCount++;
             console.log(`Detected potentially stuck ffmpeg process. Count: ${stuckCount}`);
-            
+
             // If timemark hasn't changed for 3 consecutive progress events, restart
             if (stuckCount >= 3) {
               console.log(`ffmpeg appears stuck at ${progress.timemark}. Restarting process...`);
-              
+
               // Kill current process and restart
               command.kill('SIGKILL');
-              
+
               // Create a new ytdl stream with the same video ID
               const newYtStream = ytdl(videoId, { quality: "highestaudio", filter: "audioonly" });
-              
+
               // Start a new ffmpeg process from the stuck timemark
               processStream(newYtStream, progress.timemark);
             }
@@ -140,10 +140,10 @@ export class YoutubePlayerService {
         })
         .pipe(outputStream, { end: false }) as Readable;
     };
-    
+
     // Start the initial processing
     processStream(ytStream);
-    
+
     return outputStream;
   }
 }

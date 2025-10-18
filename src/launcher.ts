@@ -14,10 +14,9 @@ export class Launcher {
     private readonly securityService: SecurityService,
     private readonly youtubePlayerService: YoutubePlayerService,
     private readonly browserConnectionService: BrowserConnectionService,
-  ) {}
+  ) { }
 
   initialize(): void {
-    // Wait until the app is ready before creating windows
     app.whenReady().then(async () => {
       this.windowManager.createMainWindow();
       this.windowManager.createInfobarWindow();
@@ -25,13 +24,12 @@ export class Launcher {
       this.windowManager.createPasswordPopupWindow();
       this.windowManager.createAudioToolbarWindow();
       this.shortcutReceptor.registerShortcuts();
-      
+
       this.setupEventHandlers();
 
       await this.securityService.loadTrainingData();
       await this.securityService.activate();
 
-      // Log that the app is ready and provide instructions
       console.log("======================================================");
       console.log("Jarvis app is ready!");
       console.log("- Press Alt+D to run system diagnostics");
@@ -40,8 +38,6 @@ export class Launcher {
       console.log("======================================================");
 
       // await this.browserConnectionService.connect({ waitUntilConnected: true });
-
-      // await this.testing();
     });
   }
 
@@ -58,7 +54,7 @@ export class Launcher {
       await this.cleanup();
       app.quit();
     });
-    
+
     // Unregister shortcuts when the app quits
     app.on("will-quit", async () => {
       await this.cleanup();
@@ -78,25 +74,5 @@ export class Launcher {
         this.windowManager.createMainWindow();
       }
     });
-  }
-
-  private async testing(): Promise<void> {
-    // Uncomment to test different services
-    
-    // await this.youtubePlayerService.playSong("Starboy by The Weeknd");
-
-    // await this.errorNotificationService.notify({
-    //   message: "Detected suspicious activity",
-    //   isCritical: false,
-    //   isApp: false,
-    //   isTerminal: true,
-    //   isAudio: true,
-    // });
-
-    // await this.securityService.activateProtocol();
-    // await wait(10000);
-    // await this.securityService.deactivateProtocol();
-
-    // Test the Chrome Extension integration
   }
 }

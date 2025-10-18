@@ -10,7 +10,7 @@ export interface Song {
 
 export class YoutubeSearchService {
   private youtube: youtube_v3.Youtube;
-  
+
   constructor() {
     this.youtube = google.youtube({
       version: 'v3',
@@ -41,14 +41,14 @@ export class YoutubeSearchService {
 
       const songs: Song[] = [];
       const videoIds = response.data.items.map(item => item.id?.videoId).filter(Boolean) as string[];
-      
+
       // Get additional details for the videos (including duration)
       const videoDetails = await this.getVideoDetails(videoIds);
-      
+
       for (const item of response.data.items) {
         if (item.id?.videoId && item.snippet) {
           const videoDetail = videoDetails.find(v => v.id === item.id?.videoId);
-          
+
           songs.push({
             videoId: item.id.videoId,
             name: item.snippet.title || 'Unknown Title',
@@ -71,7 +71,7 @@ export class YoutubeSearchService {
    * @param videoIds Array of video IDs
    * @returns Promise with video details
    */
-  private async getVideoDetails(videoIds: string[]): Promise<Array<{id: string, duration: string}>> {
+  private async getVideoDetails(videoIds: string[]): Promise<Array<{ id: string, duration: string }>> {
     try {
       const response = await this.youtube.videos.list({
         part: ['contentDetails'],
